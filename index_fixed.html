@@ -1,0 +1,1269 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ukulélé — Notes du manche (Niveau + Révision espacée)</title>
+  <style>
+    :root{
+      --bg:#0b0f17;
+      --text:#e9eefc;
+      --muted:#aab6d6;
+      --accent:#7aa2ff;
+      --good:#41d18a;
+      --bad:#ff5c7a;
+      --warn:#ffd166;
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      background:radial-gradient(1200px 700px at 20% 10%, #1a2650 0%, transparent 55%),
+                 radial-gradient(900px 600px at 80% 30%, #2a1a50 0%, transparent 55%),
+                 var(--bg);
+      color:var(--text);
+    }
+    header{
+      padding:24px 18px 10px;
+      max-width:1100px;
+      margin:0 auto;
+    }
+    h1{
+      margin:0 0 6px;
+      font-size:clamp(20px, 2.8vw, 30px);
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      line-height:1.45;
+      max-width:78ch;
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px;
+      display:grid;
+      grid-template-columns: 380px 1fr;
+      gap:16px;
+    }
+    @media (max-width: 920px){
+      .wrap{grid-template-columns: 1fr}
+    }
+
+    .card,.board{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card .inner{ padding:16px; }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; }
+    label{ font-size:14px; color:var(--muted); }
+    select, button{
+      font:inherit;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.25);
+      color:var(--text);
+      padding:10px 12px;
+      outline:none;
+    }
+    select{ min-width:160px; }
+    button{
+      cursor:pointer;
+      transition:transform .05s ease, background .2s ease, border-color .2s ease;
+      background:rgba(122,162,255,.14);
+      border-color:rgba(122,162,255,.35);
+    }
+    button:hover{ background:rgba(122,162,255,.20); }
+    button:active{ transform:translateY(1px); }
+    button.secondary{
+      background:rgba(255,255,255,.06);
+      border-color:rgba(255,255,255,.14);
+    }
+    button.danger{
+      background:rgba(255,92,122,.16);
+      border-color:rgba(255,92,122,.35);
+    }
+    button.good{
+      background:rgba(65,209,138,.14);
+      border-color:rgba(65,209,138,.35);
+    }
+    button.warn{
+      background:rgba(255, 209, 102, .12);
+      border-color:rgba(255, 209, 102, .30);
+      color:#fff1c2;
+    }
+
+    .kpi{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:12px;
+    }
+    .kpi .box{
+      background:rgba(0,0,0,.20);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      padding:12px;
+    }
+    .pill{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+    }
+    .kpi .v{
+      font-family:var(--mono);
+      font-size:20px;
+      margin-top:6px;
+    }
+
+    .hint{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(255, 209, 102, .10);
+      border:1px solid rgba(255, 209, 102, .25);
+      color:#fff1c2;
+      display:none;
+      line-height:1.35;
+    }
+
+    .footerActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .boardHead{
+      padding:12px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      background:rgba(0,0,0,.20);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(0,0,0,.20);
+      border:1px solid rgba(255,255,255,.10);
+      color:var(--muted);
+      font-size:13px;
+      white-space:nowrap;
+    }
+    .badge strong{ color:var(--text); font-weight:700; }
+
+    .grid{
+      width:100%;
+      overflow: visible;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.10));
+    }
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      table-layout: fixed;
+      min-width: 0;
+    }
+    thead th{
+      position:sticky;
+      top:0;
+      z-index:2;
+      background:rgba(10,14,22,.95);
+      color:var(--muted);
+      font-weight:600;
+      font-size:13px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      padding:10px 8px;
+      text-align:center;
+      backdrop-filter: blur(8px);
+    }
+    thead th:first-child{
+      text-align:left;
+      padding-left:14px;
+    }
+    tbody th{
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-weight:700;
+      font-size:13px;
+      padding:10px 14px;
+      border-right:1px solid rgba(255,255,255,.08);
+      white-space:nowrap;
+      position:sticky;
+      left:0;
+      z-index:1;
+      backdrop-filter: blur(8px);
+    }
+    td{
+      padding:0;
+      border-bottom:1px solid rgba(255,255,255,.14);
+      border-right:1px solid rgba(255,255,255,.14);
+    }
+    .cell{
+      height:42px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,.18);
+      cursor:pointer;
+      user-select:none;
+      transition: background .15s ease, transform .05s ease, outline-color .15s ease;
+      outline:1px solid transparent;
+      position:relative;
+      font-family:var(--mono);
+      font-size:13px;
+      color:rgba(233,238,252,.70);
+    }
+    .cell:hover{ background:rgba(122,162,255,.10); }
+    .cell:active{ transform:translateY(1px); }
+    .cell.selected{
+      outline-color:rgba(122,162,255,.65);
+      background:rgba(122,162,255,.18);
+      color:var(--text);
+    }
+    .cell.correct{
+      background:rgba(65,209,138,.18);
+      outline-color:rgba(65,209,138,.60);
+      color:var(--text);
+    }
+    .cell.wrong{
+      background:rgba(255,92,122,.16);
+      outline-color:rgba(255,92,122,.55);
+      color:var(--text);
+    }
+    /* --- Feedback immédiat (clic) --- */
+    .cell.correct{
+      background: rgba(65,209,138,.26) !important;
+      outline-color: rgba(65,209,138,.85) !important;
+      color: rgba(233,238,252,.98) !important;
+      font-weight: 800;
+    }
+    .cell.wrong{
+      background: rgba(255,92,122,.24) !important;
+      outline-color: rgba(255,92,122,.85) !important;
+    }
+
+    .cell.solution{
+      background:rgba(255, 209, 102, .16);
+      outline-color:rgba(255, 209, 102, .55);
+      color:var(--text);
+    }
+
+    .tiny{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:10px;
+      line-height:1.4;
+    }
+
+    .divider{
+      height:1px;
+      background:rgba(255,255,255,.08);
+      margin:14px 0 12px;
+    }
+
+    .srPanel{
+      display:none;
+      margin-top:10px;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(0,0,0,.20);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .srRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .srRow .left{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .srTitle{
+      font-weight:700;
+      font-size:14px;
+    }
+    .srMeta{
+      color:var(--muted);
+      font-size:12px;
+      font-family:var(--mono);
+    }
+    .gradeBtns{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    /* --- Amélioration contraste (repères frettes/cordes + affichage des notes) --- */
+    thead th{
+      color: rgba(233,238,252,.95);
+      background: rgba(22,33,58,.92);
+      border-bottom: 1px solid rgba(255,255,255,.18);
+    }
+    tbody th{
+      background: rgba(22,33,58,.78);
+      border-right: 1px solid rgba(255,255,255,.16);
+      color: rgba(233,238,252,.98);
+    }
+    /* Légère alternance verticale pour aider l'œil */
+    tbody tr:nth-child(odd) td .cell{ background: rgba(0,0,0,.16); }
+    tbody tr:nth-child(even) td .cell{ background: rgba(0,0,0,.22); }
+
+    /* Quand on affiche les notes, on augmente fortement le contraste dans la grille */
+    .show-notes thead th{ background: rgba(30,45,78,.95); }
+    .show-notes tbody th{ background: rgba(30,45,78,.82); }
+    .show-notes td .cell{
+      background: rgba(255,255,255,.08);
+      color: rgba(233,238,252,.98);
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+    .show-notes td .cell:hover{ background: rgba(122,162,255,.18); }
+
+
+    /* --- Séparation visuelle des frettes (plus net) --- */
+    .cell{
+      background: rgba(255,255,255,.06);
+      outline-color: rgba(255,255,255,.10);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
+      color: rgba(233,238,252,.82);
+    }
+    .cell:hover{ background: rgba(122,162,255,.16); }
+
+    /* Colonne frette 0 (corde à vide) : brun imitation bois */
+    thead th.fret0{
+      background: linear-gradient(180deg, rgba(120,72,34,.65), rgba(78,44,20,.55)) !important;
+      color: rgba(255,248,238,.96);
+      border-bottom: 1px solid rgba(255,255,255,.22);
+    }
+    .cell.fret0{
+      background:
+        linear-gradient(90deg,
+          rgba(120,72,34,.55) 0%,
+          rgba(148,92,45,.50) 18%,
+          rgba(110,64,30,.52) 42%,
+          rgba(160,102,52,.48) 66%,
+          rgba(98,56,26,.55) 100%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
+      color: rgba(255,248,238,.96);
+      box-shadow:
+        inset 0 0 0 1px rgba(0,0,0,.30),
+        inset 0 0 18px rgba(0,0,0,.18);
+    }
+    .show-notes .cell.fret0{
+      background:
+        linear-gradient(90deg,
+          rgba(120,72,34,.65) 0%,
+          rgba(148,92,45,.60) 18%,
+          rgba(110,64,30,.62) 42%,
+          rgba(160,102,52,.58) 66%,
+          rgba(98,56,26,.65) 100%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.16));
+      color: rgba(255,248,238,.98);
+    }
+/* Ajustements compacts: garantir que toutes les frettes tiennent sans scroll */
+    @media (max-width: 1100px){
+      .cell{ font-size: 12px; height: 38px; }
+      thead th{ font-size: 12px; padding: 8px 6px; }
+      tbody th{ font-size: 12px; padding: 8px 10px; }
+    }
+
+  
+    /* Forcer brun bois sur toutes les cases frette 0 */
+    td .cell.fret0{
+      background:
+        linear-gradient(90deg,
+          rgba(120,72,34,.55) 0%,
+          rgba(148,92,45,.50) 18%,
+          rgba(110,64,30,.52) 42%,
+          rgba(160,102,52,.48) 66%,
+          rgba(98,56,26,.55) 100%) !important;
+      color: rgba(255,248,238,.96) !important;
+    }
+
+
+/* --- Restauration bois frette 0 + feedback vert/rouge --- */
+td .cell.fret0{
+  background:
+    linear-gradient(90deg,
+      rgba(120,72,34,.55) 0%,
+      rgba(148,92,45,.50) 18%,
+      rgba(110,64,30,.52) 42%,
+      rgba(160,102,52,.48) 66%,
+      rgba(98,56,26,.55) 100%) !important;
+  color: rgba(255,248,238,.96) !important;
+}
+
+.cell.correct{
+  background: rgba(65,209,138,.32) !important;
+  outline-color: rgba(65,209,138,.95) !important;
+  color: #ffffff !important;
+  font-weight: 800;
+}
+
+.cell.wrong{
+  background: rgba(255,92,122,.30) !important;
+  outline-color: rgba(255,92,122,.95) !important;
+}
+
+
+    /* ==========================
+       Sculpture visuelle du manche
+       ========================== */
+
+    .grid{
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.34)),
+        repeating-linear-gradient(90deg,
+          rgba(120,72,34,.06) 0px,
+          rgba(120,72,34,.06) 24px,
+          rgba(160,102,52,.08) 48px,
+          rgba(98,56,26,.06) 72px),
+        radial-gradient(900px 260px at 50% 0%, rgba(255,255,255,.08), transparent 60%);
+      border-radius: var(--radius);
+    }
+
+    .board::before{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      top:56px; bottom:0;
+      pointer-events:none;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.30), transparent 10%, transparent 90%, rgba(0,0,0,.30));
+      opacity:.55;
+    }
+
+    tbody tr td::after{
+      content:"";
+      position:absolute;
+      left:-9999px;
+      right:-9999px;
+      top:50%;
+      height:2px;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg,
+        rgba(255,255,255,.00),
+        rgba(225,235,255,.22) 10%,
+        rgba(255,255,255,.34) 50%,
+        rgba(225,235,255,.22) 90%,
+        rgba(255,255,255,.00));
+      opacity:.45;
+      pointer-events:none;
+    }
+
+    td.fret12::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,255,255,.22) 0 3px, transparent 4px),
+        radial-gradient(circle at 50% 65%, rgba(255,255,255,.22) 0 3px, transparent 4px);
+      opacity:.9;
+      mix-blend-mode: screen;
+    }
+
+    td.fret5::before, td.fret7::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.18) 0 3px, transparent 4px);
+      opacity:.85;
+      mix-blend-mode: screen;
+    }
+
+
+    /* Correction relief cordes: appliquer la ligne sur chaque rangée */
+    tbody tr td{ position: relative; }
+    tbody tr td::after{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      top:50%;
+      height:2px;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg,
+        rgba(255,255,255,.00),
+        rgba(225,235,255,.22) 10%,
+        rgba(255,255,255,.34) 50%,
+        rgba(225,235,255,.22) 90%,
+        rgba(255,255,255,.00));
+      opacity:.45;
+      pointer-events:none;
+    }
+
+
+/* Notes pleines (sans dièse) plus grandes */
+.cell.natural{
+  font-size: 16px;
+  font-weight: 800;
+}
+
+</style>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0f17">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="description" content="Apprendre les notes sur le manche d'un ukulélé : niveaux + révision espacée.">
+
+<script>
+  // Service Worker: chemins relatifs (OK GitHub Pages /<repo>/)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+      try {
+        const swUrl = new URL('service-worker.js', window.location.href);
+        await navigator.serviceWorker.register(swUrl, { scope: './' });
+      } catch (e) {
+        console.warn('Service worker non enregistré:', e);
+      }
+    });
+  }
+</script>
+
+</head>
+<body>
+<header>
+  <h1>Notes du manche — Ukulélé (Niveaux + Révision espacée)</h1>
+  <p class="sub">
+    Tu choisis une note et tu cliques toutes les cases (corde + frette) où elle apparaît.
+    <strong>Mode niveau</strong> : tu débloques progressivement frettes et altérations.
+    <strong>Révision espacée</strong> : l’appli te repropose les notes au bon moment (stocké en local).
+  </p>
+</header>
+
+<div class="wrap">
+  <section class="card">
+    <div class="inner">
+      <div class="row">
+        <div>
+          <label for="modeSel">Mode</label><br/>
+          <select id="modeSel">
+            <option value="free">Libre</option>
+            <option value="level" selected>Niveau</option>
+            <option value="sr">Révision espacée</option>
+          </select>
+        </div>
+
+        <div id="levelWrap">
+          <label for="levelSel">Niveau</label><br/>
+          <select id="levelSel"></select>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div>
+          <label for="noteSel">Note à trouver</label><br/>
+          <select id="noteSel"></select>
+        </div>
+        <div>
+          <label for="maxFret">Frettes (0 → N)</label><br/>
+          <select id="maxFret">
+            <option value="3">0–3</option>
+            <option value="7">0–7</option>
+            <option value="12" selected>0–12 (classique)</option>
+            <option value="15">0–15</option>
+            <option value="18">0–18</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="footerActions">
+        <button id="nextBtn" title="Prochaine note (selon le mode)">Prochaine note</button>
+        <button id="resetBtn" class="secondary" title="Effacer tes sélections">Réinitialiser</button>
+        <button id="checkBtn" title="Vérifier ta réponse">Vérifier</button>
+        <button id="showBtn" class="secondary" title="Afficher/masquer toutes les cases où la note existe">Montrer la solution</button>
+        <button id="revealNotesBtn" class="secondary" title="Afficher/masquer les notes dans chaque case (mode entraînement)">Afficher les notes</button>
+        <button id="clearProgressBtn" class="danger" title="Effacer la progression (révision espacée) stockée sur cet appareil">Effacer la progression</button>
+      </div>
+
+      <div class="kpi">
+        <div class="box">
+          <div class="pill">Cible</div>
+          <div class="v" id="targetKpi">—</div>
+        </div>
+        <div class="box">
+          <div class="pill">Cases à trouver</div>
+          <div class="v" id="remainingKpi">—</div>
+        </div>
+        <div class="box">
+          <div class="pill">Sélectionnées</div>
+          <div class="v" id="selectedKpi">0</div>
+        </div>
+        <div class="box">
+          <div class="pill">Précision</div>
+          <div class="v" id="accuracyKpi">—</div>
+        </div>
+      </div>
+
+      <div class="hint" id="hintBox"></div>
+
+      <div class="srPanel" id="srPanel">
+        <div class="srRow">
+          <div class="left">
+            <div class="srTitle">Évalue ta réponse (révision espacée)</div>
+            <div class="srMeta" id="srMeta">—</div>
+          </div>
+          <div class="gradeBtns">
+            <button class="danger" id="gradeAgain">Encore</button>
+            <button class="warn" id="gradeHard">Dur</button>
+            <button class="secondary" id="gradeGood">Bien</button>
+            <button class="good" id="gradeEasy">Facile</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="tiny">
+        Accordage standard : <strong>G C E A</strong> (4ᵉ → 1ʳᵉ corde).<br/>
+        La frette 12 = octave (motifs qui se répètent). Révision espacée : données stockées via <span class="pill">localStorage</span>.
+      </p>
+    </div>
+  </section>
+
+  <section class="board">
+    <div class="boardHead">
+      <div class="badge">Accordage : <strong>G C E A</strong></div>
+      <div class="badge">Note : <strong id="targetBadge">—</strong></div>
+      <div class="badge">Niveau/Mode : <strong id="modeBadge">—</strong></div>
+    </div>
+    <div class="grid" id="gridHost"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const NOTES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+  const STRINGS = [
+    { name: "G", open: "G" },
+    { name: "C", open: "C" },
+    { name: "E", open: "E" },
+    { name: "A", open: "A" },
+  ];
+  const FR_MAP = new Map([
+    ["C","Do"],["C#","Do#"],["D","Ré"],["D#","Ré#"],["E","Mi"],["F","Fa"],["F#","Fa#"],
+    ["G","Sol"],["G#","Sol#"],["A","La"],["A#","La#"],["B","Si"]
+  ]);
+
+  const LEVELS = [
+    { id: 1, name: "1 — Cordes à vide + frettes 0–3 (notes naturelles)", maxFret: 3, notePool: ["C","D","E","F","G","A","B"] },
+    { id: 3, name: "3 — Frettes 0–7 (notes naturelles)",               maxFret: 7, notePool: ["C","D","E","F","G","A","B"] },
+    { id: 4, name: "4 — Frettes 0–7 (avec dièses)",                    maxFret: 7, notePool: NOTES.slice() },
+    { id: 5, name: "5 — Frettes 0–12 (avec dièses)",                   maxFret: 12, notePool: NOTES.slice() },
+    { id: 6, name: "6 — Frettes 0–15 (avec dièses)",                   maxFret: 15, notePool: NOTES.slice() },
+    { id: 7, name: "7 — Frettes 0–18 (avec dièses)",                   maxFret: 18, notePool: NOTES.slice() },
+  ];
+
+  const SR_KEY = "uku_sr_v1";
+  const DEFAULT_EF = 2.5;
+
+  let mode = "level";
+  let levelId = 1;
+  let maxFret = 12;
+  let allowedNotes = NOTES.slice();
+  let targetNote = "C";
+
+  let showCellNotes = false;
+  let solutionShown = false;
+  const selected = new Set();
+
+  const modeSel = document.getElementById("modeSel");
+  const levelWrap = document.getElementById("levelWrap");
+  const levelSel = document.getElementById("levelSel");
+  const noteSel = document.getElementById("noteSel");
+  const maxFretSel = document.getElementById("maxFret");
+  const gridHost = document.getElementById("gridHost");
+
+  const targetBadge = document.getElementById("targetBadge");
+  const modeBadge = document.getElementById("modeBadge");
+  const targetKpi = document.getElementById("targetKpi");
+  const remainingKpi = document.getElementById("remainingKpi");
+  const selectedKpi = document.getElementById("selectedKpi");
+  const accuracyKpi = document.getElementById("accuracyKpi");
+  const hintBox = document.getElementById("hintBox");
+
+  const nextBtn = document.getElementById("nextBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const checkBtn = document.getElementById("checkBtn");
+  const showBtn = document.getElementById("showBtn");
+  const revealNotesBtn = document.getElementById("revealNotesBtn");
+  const clearProgressBtn = document.getElementById("clearProgressBtn");
+
+  const srPanel = document.getElementById("srPanel");
+  const srMeta = document.getElementById("srMeta");
+  const gradeAgain = document.getElementById("gradeAgain");
+  const gradeHard  = document.getElementById("gradeHard");
+  const gradeGood  = document.getElementById("gradeGood");
+  const gradeEasy  = document.getElementById("gradeEasy");
+
+  function mod(n, m){ return ((n % m) + m) % m; }
+  function noteIndex(note){ return NOTES.indexOf(note); }
+  function transpose(note, semitones){
+    const i = noteIndex(note);
+    return NOTES[mod(i + semitones, 12)];
+  }
+  function noteAt(stringIndex, fret){
+    return transpose(STRINGS[stringIndex].open, fret);
+  }
+  function keyOf(sIndex, fret){ return `${sIndex}|${fret}`; }
+
+  function allPositionsOf(note){
+    const positions = [];
+    for(let s=0; s<STRINGS.length; s++){
+      for(let f=0; f<=maxFret; f++){
+        if(noteAt(s,f) === note) positions.push({s,f});
+      }
+    }
+    return positions;
+  }
+  function formatNote(note){ return `${note} (${FR_MAP.get(note)})`; }
+
+  function setHint(html, kind="warn"){
+    hintBox.style.display = "block";
+    hintBox.innerHTML = html;
+    if(kind === "good"){
+      hintBox.style.background = "rgba(65,209,138,.12)";
+      hintBox.style.borderColor = "rgba(65,209,138,.30)";
+      hintBox.style.color = "#d8ffe9";
+    } else if(kind === "bad"){
+      hintBox.style.background = "rgba(255,92,122,.12)";
+      hintBox.style.borderColor = "rgba(255,92,122,.30)";
+      hintBox.style.color = "#ffd3db";
+    } else {
+      hintBox.style.background = "rgba(255, 209, 102, .10)";
+      hintBox.style.borderColor = "rgba(255, 209, 102, .25)";
+      hintBox.style.color = "#fff1c2";
+    }
+  }
+  function clearHint(){ hintBox.style.display = "none"; hintBox.innerHTML = ""; }
+
+  function hideSrPanel(){ srPanel.style.display = "none"; srMeta.textContent = "—"; }
+
+  function loadSR(){
+    try{
+      const raw = localStorage.getItem(SR_KEY);
+      if(!raw) return {};
+      const obj = JSON.parse(raw);
+      return obj && typeof obj === "object" ? obj : {};
+    } catch { return {}; }
+  }
+  function saveSR(obj){ localStorage.setItem(SR_KEY, JSON.stringify(obj)); }
+  function ensureSRNote(sr, note){
+    if(!sr[note]){
+      sr[note] = { ef: DEFAULT_EF, intervalMin: 0, reps: 0, dueTs: 0, lastGrade: null, lastTs: 0 };
+    }
+    return sr[note];
+  }
+
+  function applySRGrade(note, grade){
+    const sr = loadSR();
+    const s = ensureSRNote(sr, note);
+    const now = Date.now();
+    const q = grade;
+    const delta = (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
+    s.ef = Math.max(1.3, s.ef + delta);
+
+    if(grade < 3){
+      s.reps = 0;
+      s.intervalMin = 5;
+    } else {
+      s.reps += 1;
+      if(s.reps === 1) s.intervalMin = 10;
+      else if(s.reps === 2) s.intervalMin = 60;
+      else s.intervalMin = Math.round(s.intervalMin * s.ef);
+      if(grade === 5) s.intervalMin = Math.round(s.intervalMin * 1.35);
+      if(grade === 3) s.intervalMin = Math.round(s.intervalMin * 0.85);
+    }
+    s.dueTs = now + s.intervalMin * 60 * 1000;
+    s.lastGrade = grade;
+    s.lastTs = now;
+
+    saveSR(sr);
+    return { ...s };
+  }
+
+  function srDueList(notePool){
+    const sr = loadSR();
+    const now = Date.now();
+    const due = [];
+    const notSeen = [];
+    for(const n of notePool){
+      if(!sr[n]) notSeen.push(n);
+      else if((sr[n].dueTs || 0) <= now) due.push(n);
+    }
+    return { due, notSeen, sr };
+  }
+
+  function pickNextSRNote(notePool){
+    const { due, notSeen, sr } = srDueList(notePool);
+    if(due.length) return due[Math.floor(Math.random() * due.length)];
+    if(notSeen.length) return notSeen[Math.floor(Math.random() * notSeen.length)];
+    let best = notePool[0];
+    let bestTs = Infinity;
+    for(const n of notePool){
+      const ts = (sr[n]?.dueTs ?? 0);
+      if(ts < bestTs){ bestTs = ts; best = n; }
+    }
+    return best;
+  }
+
+  function srStatsText(note, notePool){
+    const sr = loadSR();
+    const s = sr[note];
+    const now = Date.now();
+    const pool = srDueList(notePool);
+    const dueCount = pool.due.length;
+    const newCount = pool.notSeen.length;
+
+    if(!s){
+      return `Note: ${note} • Nouveau • Dues: ${dueCount} • Nouvelles: ${newCount}`;
+    }
+    const mins = Math.max(0, Math.round(((s.dueTs ?? 0) - now) / 60000));
+    const dueStr = mins === 0 ? "maintenant" : `dans ~${mins} min`;
+    const gradeStr = s.lastGrade === null ? "—" : s.lastGrade;
+    return `Note: ${note} • reps=${s.reps} • EF=${(s.ef ?? DEFAULT_EF).toFixed(2)} • prochaine: ${dueStr} • last=${gradeStr} • Dues: ${dueCount} • Nouvelles: ${newCount}`;
+  }
+
+  function buildLevelSelector(){
+    levelSel.innerHTML = "";
+    for(const lvl of LEVELS){
+      const opt = document.createElement("option");
+      opt.value = String(lvl.id);
+      opt.textContent = lvl.name;
+      levelSel.appendChild(opt);
+    }
+    levelSel.value = String(levelId);
+  }
+
+  function buildNoteSelector(){
+    noteSel.innerHTML = "";
+    for(const n of allowedNotes){
+      const opt = document.createElement("option");
+      opt.value = n;
+      opt.textContent = `${n}  (${FR_MAP.get(n)})`;
+      noteSel.appendChild(opt);
+    }
+    if(!allowedNotes.includes(targetNote)) targetNote = allowedNotes[0] ?? "C";
+    noteSel.value = targetNote;
+  }
+
+  function buildGrid(){
+    const table = document.createElement("table");
+
+    // Colgroup pour garantir que toutes les frettes tiennent à l’écran (pas de scroll)
+    const colgroup = document.createElement("colgroup");
+    const colString = document.createElement("col");
+    colString.style.width = "150px"; // colonne "Corde"
+    colgroup.appendChild(colString);
+    for(let f=0; f<=maxFret; f++){
+      const col = document.createElement("col");
+      // sans largeur: table-layout:fixed -> répartition égale du reste
+      colgroup.appendChild(col);
+    }
+    table.appendChild(colgroup);
+
+    const thead = document.createElement("thead");
+    const hr = document.createElement("tr");
+    const th0 = document.createElement("th");
+    th0.textContent = "Corde";
+    hr.appendChild(th0);
+
+    for(let f=0; f<=maxFret; f++){
+      const th = document.createElement("th");
+      th.textContent = f;
+      if(f === 0) th.classList.add("fret0");
+      hr.appendChild(th);
+    }
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    STRINGS.forEach((sObj, sIndex) => {
+      const tr = document.createElement("tr");
+      const th = document.createElement("th");
+      th.textContent = `${sObj.name} (à vide)`;
+      tr.appendChild(th);
+
+      for(let f=0; f<=maxFret; f++){
+        const td = document.createElement("td");
+        const div = document.createElement("div");
+        div.className = "cell";
+        div.dataset.s = String(sIndex);
+        div.dataset.f = String(f);
+
+        const n = noteAt(sIndex, f);
+        div.dataset.note = n;
+        div.textContent = showCellNotes ? n : "";
+
+        if(f === 0) div.classList.add("fret0");
+
+        div.addEventListener("click", () => toggleCell(sIndex, f));
+
+        td.appendChild(div);
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    gridHost.innerHTML = "";
+    gridHost.appendChild(table);
+
+    repaintAll();
+  }
+
+  function getCellEl(sIndex, fret){
+    return gridHost.querySelector(`.cell[data-s="${sIndex}"][data-f="${fret}"]`);
+  }
+
+  function updateBadges(){
+    targetBadge.textContent = formatNote(targetNote);
+    if(mode === "free") modeBadge.textContent = `Libre • frettes 0–${maxFret}`;
+    if(mode === "level") modeBadge.textContent = `Niveau ${levelId} • frettes 0–${maxFret}`;
+    if(mode === "sr") modeBadge.textContent = `Révision espacée • pool: ${allowedNotes.length} notes`;
+  }
+
+  function updateKPIs(){
+    const solution = allPositionsOf(targetNote);
+    const solutionSet = new Set(solution.map(p => keyOf(p.s,p.f)));
+
+    const selectedCount = selected.size;
+    const correctSelected = [...selected].filter(k => solutionSet.has(k)).length;
+    const remaining = solution.length - correctSelected;
+
+    targetKpi.textContent = `${targetNote} / ${FR_MAP.get(targetNote)}`;
+    remainingKpi.textContent = `${Math.max(0, remaining)}`;
+    selectedKpi.textContent = `${selectedCount}`;
+    accuracyKpi.textContent = selectedCount === 0 ? "—" : `${Math.round((correctSelected / selectedCount) * 100)}%`;
+
+    if(mode === "sr"){
+      srMeta.textContent = srStatsText(targetNote, allowedNotes);
+    }
+  }
+
+  function repaintAll(){
+    gridHost.querySelectorAll(".cell").forEach(c => {
+      c.classList.remove("selected","correct","wrong","solution");
+      const s = Number(c.dataset.s);
+      const f = Number(c.dataset.f);
+      c.textContent = showCellNotes ? c.dataset.note : "";
+      const k = keyOf(s,f);
+      if(selected.has(k)){
+        c.classList.add("selected","correct");
+        c.textContent = targetNote;
+        if(!targetNote.includes("#")) c.classList.add("natural"); else c.classList.remove("natural");
+      }
+    });
+
+    if(solutionShown){
+      for(const pos of allPositionsOf(targetNote)){
+        const el = getCellEl(pos.s, pos.f);
+        el?.classList.add("solution");
+        if(!showCellNotes) el.textContent = targetNote;
+      if(!targetNote.includes("#")) el.classList.add("natural"); else el.classList.remove("natural");
+      }
+    }
+
+    updateBadges();
+    updateKPIs();
+  }
+
+  function toggleCell(sIndex, fret){
+    const key = keyOf(sIndex, fret);
+    const el = getCellEl(sIndex, fret);
+    if(!el) return;
+
+    // Si déjà verte (bonne) -> on efface
+    if(selected.has(key)){
+      selected.delete(key);
+      el.classList.remove("selected","correct","wrong");
+      el.textContent = showCellNotes ? el.dataset.note : "";
+      updateKPIs();
+      return;
+    }
+
+    // Si déjà rouge (fausse) -> on efface simplement
+    if(el.classList.contains("wrong")){
+      el.classList.remove("wrong");
+      el.textContent = showCellNotes ? el.dataset.note : "";
+      updateKPIs();
+      return;
+    }
+
+    const clickedNote = el.dataset.note;
+
+    // Bonne case
+    if(clickedNote === targetNote){
+      selected.add(key);
+      el.classList.add("selected","correct");
+      el.textContent = targetNote;
+      if(!targetNote.includes("#")) el.classList.add("natural"); else el.classList.remove("natural");
+      updateKPIs();
+      return;
+    }
+
+    // Mauvaise case
+    el.classList.add("wrong");
+    el.classList.remove("selected","correct");
+    if(!showCellNotes) el.textContent = "";
+    updateKPIs();
+  }
+
+  function applyModeAndLevel(){
+    if(mode === "free"){
+      levelWrap.style.display = "none";
+      maxFretSel.disabled = false;
+      noteSel.disabled = false;
+      clearProgressBtn.style.display = "none";
+
+      maxFret = Number(maxFretSel.value);
+      allowedNotes = NOTES.slice();
+    }
+
+    if(mode === "level"){
+      levelWrap.style.display = "block";
+      maxFretSel.disabled = true;
+      noteSel.disabled = false;
+      clearProgressBtn.style.display = "none";
+
+      const lvl = LEVELS.find(l => l.id === levelId) ?? LEVELS[0];
+      maxFret = lvl.maxFret;
+      allowedNotes = lvl.notePool.slice();
+      maxFretSel.value = String(maxFret);
+    }
+
+    if(mode === "sr"){
+      levelWrap.style.display = "block";
+      maxFretSel.disabled = true;
+      noteSel.disabled = true;
+      clearProgressBtn.style.display = "inline-block";
+
+      const lvl = LEVELS.find(l => l.id === levelId) ?? LEVELS[0];
+      maxFret = lvl.maxFret;
+      allowedNotes = lvl.notePool.slice();
+      maxFretSel.value = String(maxFret);
+    }
+
+    buildNoteSelector();
+    buildGrid();
+    updateBadges();
+    updateKPIs();
+  }
+
+  function setTarget(note){
+    if(!allowedNotes.includes(note)) note = allowedNotes[0] ?? "C";
+    targetNote = note;
+    noteSel.value = note;
+
+    solutionShown = false;
+    showBtn.textContent = "Montrer la solution";
+    clearHint();
+    hideSrPanel();
+
+    selected.clear();
+    repaintAll();
+  }
+
+  function nextNote(){
+    clearHint();
+    hideSrPanel();
+    selected.clear();
+    solutionShown = false;
+    showBtn.textContent = "Montrer la solution";
+
+    if(mode === "sr"){
+      setTarget(pickNextSRNote(allowedNotes));
+      return;
+    }
+    const pool = allowedNotes.length ? allowedNotes : NOTES;
+    setTarget(pool[Math.floor(Math.random()*pool.length)]);
+  }
+
+  function resetSelections(){
+    selected.clear();
+    solutionShown = false;
+    showBtn.textContent = "Montrer la solution";
+    clearHint();
+    hideSrPanel();
+    repaintAll();
+  }
+
+  function checkAnswer(){
+    const solution = allPositionsOf(targetNote);
+    const solutionSet = new Set(solution.map(p => keyOf(p.s,p.f)));
+
+    let correctSelected = 0;
+    let wrongSelected = 0;
+
+    gridHost.querySelectorAll(".cell").forEach(c=> c.classList.remove("correct","wrong"));
+
+    for(const k of selected){
+      const [sStr,fStr] = k.split("|");
+      const s = Number(sStr), f = Number(fStr);
+      const el = getCellEl(s,f);
+      if(!el) continue;
+      if(solutionSet.has(k)){
+        el.classList.add("correct");
+        correctSelected++;
+      } else {
+        el.classList.add("wrong");
+        wrongSelected++;
+        // Mauvais clic: ne pas révéler la note
+        if(!showCellNotes) el.textContent = "";
+      }
+    }
+
+    const remaining = solution.length - correctSelected;
+    const perfect = (wrongSelected === 0 && remaining === 0);
+
+    if(perfect){
+      setHint(`Parfait. Tu as trouvé <strong>toutes</strong> les positions de <strong>${formatNote(targetNote)}</strong>.`, "good");
+    } else {
+      setHint(
+        `Résultat : <strong>${correctSelected}</strong> correct, <strong>${wrongSelected}</strong> faux, <strong>${remaining}</strong> restant à trouver pour <strong>${formatNote(targetNote)}</strong>.`,
+        wrongSelected > 0 ? "bad" : "warn"
+      );
+    }
+
+    updateKPIs();
+
+    if(mode === "sr"){
+      srPanel.style.display = "block";
+      srMeta.textContent = srStatsText(targetNote, allowedNotes);
+      if(!perfect){
+        setHint(`${hintBox.innerHTML}<br/><br/>En révision espacée : si ce n’était pas solide, choisis <strong>Encore</strong> ou <strong>Dur</strong>.`, "bad");
+      }
+    }
+  }
+
+  function toggleSolution(){
+    solutionShown = !solutionShown;
+    showBtn.textContent = solutionShown ? "Masquer la solution" : "Montrer la solution";
+    repaintAll();
+    if(solutionShown){
+      setHint(`Solution affichée : les cases <span class="pill">jaunes</span> contiennent <strong>${formatNote(targetNote)}</strong>.`, "warn");
+    } else clearHint();
+  }
+
+  function toggleRevealNotes(){
+    showCellNotes = !showCellNotes;
+    document.body.classList.toggle('show-notes', showCellNotes);
+    revealNotesBtn.textContent = showCellNotes ? "Masquer les notes" : "Afficher les notes";
+    repaintAll();
+    if(showCellNotes){
+      setHint(`Mode entraînement : les notes sont visibles. Quand tu te sens prêt(e), masque-les.`, "warn");
+    } else clearHint();
+  }
+
+  function clearProgress(){
+    localStorage.removeItem(SR_KEY);
+    setHint(`Progression effacée (révision espacée).`, "warn");
+    updateKPIs();
+  }
+
+  function grade(gradeValue){
+    if(mode !== "sr") return;
+    const s = applySRGrade(targetNote, gradeValue);
+    const when = s.dueTs <= Date.now() ? "maintenant" : `dans ~${Math.max(0, Math.round((s.dueTs - Date.now())/60000))} min`;
+    const gradeName = gradeValue === 0 ? "Encore" : gradeValue === 3 ? "Dur" : gradeValue === 4 ? "Bien" : "Facile";
+    setHint(`Noté : <strong>${gradeName}</strong>. Prochaine révision de <strong>${formatNote(targetNote)}</strong> : <strong>${when}</strong>.`, gradeValue >= 4 ? "good" : (gradeValue === 3 ? "warn" : "bad"));
+    srMeta.textContent = srStatsText(targetNote, allowedNotes);
+    nextNote();
+  }
+
+  function init(){
+    buildLevelSelector();
+    levelSel.value = String(levelId);
+    modeSel.value = mode;
+
+    document.body.classList.toggle('show-notes', showCellNotes);
+    applyModeAndLevel();
+
+    if(mode === "sr") setTarget(pickNextSRNote(allowedNotes));
+    else setTarget(targetNote);
+
+    updateBadges();
+    updateKPIs();
+  }
+
+  modeSel.addEventListener("change", (e) => {
+    mode = e.target.value;
+    hideSrPanel();
+    clearHint();
+    document.body.classList.toggle('show-notes', showCellNotes);
+    applyModeAndLevel();
+    nextNote();
+  });
+
+  levelSel.addEventListener("change", (e) => {
+    levelId = Number(e.target.value);
+    hideSrPanel();
+    clearHint();
+    document.body.classList.toggle('show-notes', showCellNotes);
+    applyModeAndLevel();
+    nextNote();
+  });
+
+  noteSel.addEventListener("change", (e) => {
+    if(mode === "sr") return;
+    setTarget(e.target.value);
+  });
+
+  maxFretSel.addEventListener("change", (e) => {
+    maxFret = Number(e.target.value);
+    selected.clear();
+    solutionShown = false;
+    hideSrPanel();
+    clearHint();
+    buildGrid();
+  });
+
+  nextBtn.addEventListener("click", nextNote);
+  resetBtn.addEventListener("click", resetSelections);
+  checkBtn.addEventListener("click", checkAnswer);
+  showBtn.addEventListener("click", toggleSolution);
+  revealNotesBtn.addEventListener("click", toggleRevealNotes);
+  clearProgressBtn.addEventListener("click", clearProgress);
+
+  gradeAgain.addEventListener("click", () => grade(0));
+  gradeHard.addEventListener("click", () => grade(3));
+  gradeGood.addEventListener("click", () => grade(4));
+  gradeEasy.addEventListener("click", () => grade(5));
+
+  init();
+})();
+</script>
+</body>
+</html>
