@@ -359,7 +359,7 @@
       color: rgba(255,248,238,.96);
       border-bottom: 1px solid rgba(255,255,255,.22);
     }
-    \.cell\.fret0{
+    .cell.fret0{
       background:
         linear-gradient(90deg,
           rgba(120,72,34,.55) 0%,
@@ -373,7 +373,7 @@
         inset 0 0 0 1px rgba(0,0,0,.30),
         inset 0 0 18px rgba(0,0,0,.18);
     }
-    .show-notes \.cell\.fret0{
+    .show-notes .cell.fret0{
       background:
         linear-gradient(90deg,
           rgba(120,72,34,.65) 0%,
@@ -532,10 +532,22 @@ td .cell.fret0{
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+
+
+
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="description" content="Apprendre les notes sur le manche d'un ukulélé : niveaux + révision espacée.">
+
 <script>
+  // Service Worker: chemins relatifs (OK GitHub Pages /<repo>/)
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js');
+    window.addEventListener('load', async () => {
+      try {
+        const swUrl = new URL('service-worker.js', window.location.href);
+        await navigator.serviceWorker.register(swUrl, { scope: './' });
+      } catch (e) {
+        console.warn('Service worker non enregistré:', e);
+      }
     });
   }
 </script>
