@@ -1,5 +1,5 @@
 /* Ukulele PWA Service Worker (offline-first) */
-const CACHE_NAME = "ukulele-manche-v2";
+const CACHE_NAME = "ukulele-manche-v99";
 const ASSETS = [
   "./",
   "./index.html",
