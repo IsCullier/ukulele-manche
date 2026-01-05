@@ -1,9 +1,10 @@
 /* Ukulele PWA Service Worker (offline-first) */
-const CACHE_NAME = "ukulele-manche-v1";
+const CACHE_NAME = "ukulele-manche-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
+  "./service-worker.js",
   "./icon-192.png",
   "./icon-512.png",
   "./icon-maskable-512.png"
