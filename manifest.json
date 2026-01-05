@@ -1,8 +1,8 @@
 {
   "name": "Manche Ukulélé",
   "short_name": "Ukulélé",
-  "start_url": "./ukulele-manche/",
-  "scope": "./ukulele-manche/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0b0f17",
   "theme_color": "#0b0f17",
